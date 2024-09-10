@@ -95,6 +95,9 @@ const config: Config = {
         },
       },
       fontSize: {
+        "8-regular": ["8px", { fontWeight: "400" }],
+        "8-medium": ["8px", { fontWeight: "500" }],
+        "8-semibold": ["8px", { fontWeight: "600" }],
         "12-regular": ["12px", { fontWeight: "400" }],
         "12-medium": ["12px", { fontWeight: "500" }],
         "12-semibold": ["12px", { fontWeight: "600" }],
@@ -114,6 +117,20 @@ const config: Config = {
         "60-medium": ["60px", { fontWeight: "500" }],
         "60-semibold": ["60px", { fontWeight: "600" }],
       },
+    },
+    keyframes: {
+      slideDownFadeIn: {
+        "0%": { opacity: "0", transform: "translateY(-10px)" },
+        "100%": { opacity: "1", transform: "translateY(0)" },
+      },
+      slideUpFadeOut: {
+        "0%": { opacity: "1", transform: "translateY(0)" },
+        "100%": { opacity: "0", transform: "translateY(-10px)" },
+      },
+    },
+    animation: {
+      slideDownFadeIn: "slideDownFadeIn 0.3s ease-out forwards",
+      slideUpFadeOut: "slideUpFadeOut 0.3s ease-in forwards",
     },
   },
   plugins: [],

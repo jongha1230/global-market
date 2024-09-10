@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
+import { PiCheckBold } from "react-icons/pi";
 
 export interface InputProps {
   value: string;
@@ -11,6 +12,7 @@ export interface InputProps {
   label?: string;
   id?: string;
   status?: "default" | "error" | "success";
+  iconOnClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Input = ({
@@ -21,38 +23,40 @@ const Input = ({
   onChange,
   id,
   status = "default",
+  iconOnClick,
 }: InputProps) => {
-  const [inputState, setInputState] = useState<"default" | "focus" | "typing">(
-    "default"
-  );
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
-    setInputState("focus");
+    setIsFocused(true);
   };
 
   const handleBlur = () => {
-    setInputState(value ? "typing" : "default");
+    setIsFocused(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e);
-    setInputState(e.target.value ? "typing" : "focus");
   };
 
-  const borderColor =
-    inputState === "focus" || inputState === "typing"
-      ? "border-accent-100"
-      : "border-black";
+  const borderColor = isFocused ? "border-accent-100" : "border-black-50";
+  const labelClass =
+    isFocused || value !== ""
+      ? "top-2 -translate-y-1 text-12-medium"
+      : "top-1/2 -translate-y-1/2 text-16-medium";
+
+  const iconClass =
+    isFocused || value !== ""
+      ? "top-2 translate-y-4 "
+      : "top-1/2 -translate-y-1/2";
+
+  const Icon = status === "success" ? PiCheckBold : IoArrowForwardCircleOutline;
 
   return (
     <div className="relative mt-6 w-full">
       <label
         htmlFor={id}
-        className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-all duration-300 ${
-          inputState === "focus" || inputState === "typing"
-            ? "top-0 -translate-y-0 text-xs text-primary-100"
-            : ""
-        }`}
+        className={`absolute left-4 text-black-50 pointer-events-none transition-all duration-300 ${labelClass}`}
       >
         {label}
       </label>
@@ -64,13 +68,18 @@ const Input = ({
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className={`peer w-full px-3 py-3 text- border ${borderColor} rounded focus:outline-none focus:ring-1 focus:ring-accent-100 text-gray-900 placeholder-transparent`}
+        className={`peer w-full pl-4 pr-10 pt-5 pb-1 text-16 border-2 ${borderColor} rounded focus:ring-1 focus:outline-none placeholder-transparent`}
         placeholder={label}
       />
-      <IoArrowForwardCircleOutline
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-        size={24}
-      />
+      {iconOnClick && (
+        <button
+          type="button"
+          onClick={iconOnClick}
+          className={`absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ${iconClass}`}
+        >
+          <Icon size={20} />
+        </button>
+      )}
     </div>
   );
 };
