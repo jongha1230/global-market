@@ -1,18 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FocusEvent, useState } from "react";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
 import { PiCheckBold } from "react-icons/pi";
 
 export interface InputProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   name?: string;
   label?: string;
   id?: string;
   status?: "default" | "error" | "success";
+  readOnly?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   iconOnClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const Input = ({
@@ -23,23 +27,35 @@ const Input = ({
   onChange,
   id,
   status = "default",
+  readOnly,
   iconOnClick,
+  onKeyDown,
+  onFocus,
+  onBlur,
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleFocus = () => {
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
+    if (onFocus) onFocus(e);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(false);
+    if (onBlur) onBlur(e);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e);
-  };
+  const borderColor =
+    status === "error"
+      ? "border-danger-80"
+      : isFocused
+      ? "border-accent-100"
+      : "border-black-50";
 
-  const borderColor = isFocused ? "border-accent-100" : "border-black-50";
+  const bgColor = status === "error" ? "bg-danger-20" : "bg-white";
+
+  const labelColor = status === "error" ? "placeholder-danger-80" : "";
+
   const labelClass =
     isFocused || value !== ""
       ? "top-2 -translate-y-1 text-12-medium"
@@ -53,10 +69,10 @@ const Input = ({
   const Icon = status === "success" ? PiCheckBold : IoArrowForwardCircleOutline;
 
   return (
-    <div className="relative mt-6 w-full">
+    <div className="relative w-full">
       <label
         htmlFor={id}
-        className={`absolute left-4 text-black-50 pointer-events-none transition-all duration-300 ${labelClass}`}
+        className={`absolute left-4 text-black-50 pointer-events-none transition-all duration-300 ${labelColor} ${labelClass}`}
       >
         {label}
       </label>
@@ -65,10 +81,12 @@ const Input = ({
         id={id}
         name={name}
         value={value}
-        onChange={handleChange}
+        readOnly={readOnly}
+        onChange={onChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className={`peer w-full pl-4 pr-10 pt-5 pb-1 text-16 border-2 ${borderColor} rounded focus:ring-1 focus:outline-none placeholder-transparent`}
+        onKeyDown={onKeyDown}
+        className={`peer w-full pl-4 pr-10 pt-5 pb-1 text-16 border-2 ${borderColor} ${bgColor} rounded-lg focus:ring-1 focus:outline-none placeholder-transparent`}
         placeholder={label}
       />
       {iconOnClick && (

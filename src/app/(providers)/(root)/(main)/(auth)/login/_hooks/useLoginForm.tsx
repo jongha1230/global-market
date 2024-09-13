@@ -1,18 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { LogInFormData } from "../_components/LoginForm/LoginForm";
 
+export interface SignUpFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nickname: string;
+  address: string;
+  zonecode: string;
+  detailAddress: string;
+}
 interface FormErrors
-  extends Partial<Record<keyof LogInFormData, string | null>> {
+  extends Partial<Record<keyof SignUpFormData, string | null>> {
   form?: string | null;
 }
 
-const useLoginForm = () => {
-  const [formData, setFormData] = useState<LogInFormData>({
+const useSignUpForm = () => {
+  const [formData, setFormData] = useState<SignUpFormData>({
     email: "",
     password: "",
-    keepLoggedIn: false,
+    confirmPassword: "",
+    nickname: "",
+    address: "",
+    zonecode: "",
+    detailAddress: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -40,4 +52,4 @@ const useLoginForm = () => {
   return { formData, setFormData, errors, handleChange, setErrors };
 };
 
-export default useLoginForm;
+export default useSignUpForm;
