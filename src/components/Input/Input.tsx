@@ -10,6 +10,7 @@ export interface InputProps {
   name?: string;
   label?: string;
   id?: string;
+  error?: string | null;
   status?: "default" | "error" | "success";
   readOnly?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -24,10 +25,11 @@ const Input = ({
   label = "",
   name = "",
   value,
-  onChange,
   id,
   status = "default",
+  error,
   readOnly,
+  onChange,
   iconOnClick,
   onKeyDown,
   onFocus,
@@ -67,6 +69,10 @@ const Input = ({
       : "top-1/2 -translate-y-1/2";
 
   const Icon = status === "success" ? PiCheckBold : IoArrowForwardCircleOutline;
+
+  if (error) {
+    status = "error";
+  }
 
   return (
     <div className="relative w-full">

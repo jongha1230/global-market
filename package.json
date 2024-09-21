@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "gen": "npx supabase gen types --lang=typescript --project-id nmorvefkzcumhtiqllvn --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@sentry/nextjs": "^8.28.0",
@@ -17,7 +18,7 @@
     "@tanstack/react-query": "^5.53.3",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
-    "next": "14.2.7",
+    "next": "^14.2.13",
     "react": "^18",
     "react-daum-postcode": "^3.1.3",
     "react-dom": "^18",

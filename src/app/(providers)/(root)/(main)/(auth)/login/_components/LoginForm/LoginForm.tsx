@@ -5,7 +5,7 @@ import Input from "@/components/Input";
 import Link from "next/link";
 import { useState } from "react";
 import { CgDanger } from "react-icons/cg";
-import useSignUpForm from "../../_hooks/useLoginForm";
+import useSignUpForm from "../../../signup/_hooks/useSignUp";
 
 export interface LogInFormData {
   email: string;
@@ -60,7 +60,7 @@ const LoginForm = () => {
         onSubmit={handleSubmit}
         className="w-1/3 h-1/2 flex flex-col items-center justify-center"
       >
-        <h2 className="text-32-semibold mb-[70px]">로그인</h2>
+        <h2 className="text-32-semibold mt-[100px] mb-[70px]">로그인</h2>
         <div className="flex flex-col w-[400px]">
           <Input
             label="이메일"
@@ -75,9 +75,7 @@ const LoginForm = () => {
 
           <div
             className={`w-full overflow-hidden mt-6 ${
-              showPassword
-                ? "animate-slideDownFadeIn"
-                : "animate-slideUpFadeOut"
+              showPassword ? "animate-slideDownFadeIn" : "opacity-0"
             }`}
           >
             <Input
@@ -102,7 +100,7 @@ const LoginForm = () => {
 
         <div
           className={`overflow-hidden flex justify-center w-[400px] mt-[60px] ${
-            showPassword ? "animate-slideDownFadeIn" : "animate-slideUpFadeOut"
+            showPassword ? "animate-slideDownFadeIn" : "opacity-0"
           }`}
         >
           <Button

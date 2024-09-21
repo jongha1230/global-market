@@ -1,7 +1,12 @@
+import Header from "@/components/Header";
+
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="flex flex-col min-w-full min-h-screen justify-center items-center">
-      {children}
+    <main className="">
+      <Header />
+      <div className="flex flex-col items-center justify-center">
+        {children}
+      </div>
     </main>
   );
 };
