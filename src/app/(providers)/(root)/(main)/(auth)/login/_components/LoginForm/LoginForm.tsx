@@ -3,9 +3,8 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Link from "next/link";
-import { useState } from "react";
 import { CgDanger } from "react-icons/cg";
-import useSignUpForm from "../../../signup/_hooks/useSignUp";
+import useLogin from "../../_hooks/useLogin";
 
 export interface LogInFormData {
   email: string;
@@ -14,45 +13,17 @@ export interface LogInFormData {
 }
 
 const LoginForm = () => {
-  const { formData, setFormData, errors, handleChange, setErrors } =
-    useSignUpForm();
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
-
-  const handleEmailSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (formData.email) {
-      setShowPassword(true);
-    }
-  };
-
-  const handleEmailKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault(); // 폼 제출 방지
-      if (formData.email) {
-        setShowPassword(true);
-      }
-    }
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange(e);
-    if (showPassword) {
-      setShowPassword(false);
-      setFormData((prev) => ({ ...prev, password: "" }));
-    }
-    setLoginError(null);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange(e);
-    setLoginError(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoginError("이메일 또는 비밀번호가 올바르지 않습니다.");
-  };
+  const {
+    formData,
+    showPassword,
+    loginError,
+    isLoading,
+    handleChange,
+    handleEmailSubmit,
+    handleEmailKeyDown,
+    handleEmailChange,
+    handleSubmit,
+  } = useLogin();
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -85,7 +56,7 @@ const LoginForm = () => {
               type="password"
               value={formData.password}
               status={loginError ? "error" : "default"}
-              onChange={handlePasswordChange}
+              onChange={handleChange}
             />
           </div>
           {loginError && (
