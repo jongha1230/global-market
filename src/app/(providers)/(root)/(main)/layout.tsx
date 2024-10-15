@@ -4,9 +4,9 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="">
       <Header />
-      <div className="flex flex-col items-center justify-center">
+      <main className="flex flex-col items-center justify-center">
         {children}
-      </div>
+      </main>
     </main>
   );
 };
