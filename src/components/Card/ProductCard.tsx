@@ -1,13 +1,14 @@
 import { Product } from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
+import { Card, CardContent } from "../ui/card";
 
 // 상품 카드 컴포넌트
 export const ProductCard = ({ product }: { product: Product }) => {
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="h-full transition-transform hover:-translate-y-1">
-        <div className="p-0">
+      <Card className="h-full transition-transform hover:-translate-y-1">
+        <CardContent className="p-0">
           <div className="relative aspect-square">
             <Image
               src={product.imageUrl}
@@ -28,8 +29,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
               <span>{product.createdAt}</span>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </Link>
   );
 };

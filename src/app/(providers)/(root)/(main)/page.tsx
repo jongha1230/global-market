@@ -1,5 +1,7 @@
 import { ProductCard } from "@/components/Card/ProductCard";
 import { Product } from "@/types/product";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 const MainPage = () => {
   const products: Product[] = [
@@ -44,6 +46,13 @@ const MainPage = () => {
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+      <Link
+        href="/products/new"
+        className="fixed bottom-10 right-36 w-14 h-14 bg-primary-10 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
+      >
+        <Plus size={24} color="black" />
+        <span className="sr-only">상품 등록하기</span>
+      </Link>
     </main>
   );
 };
