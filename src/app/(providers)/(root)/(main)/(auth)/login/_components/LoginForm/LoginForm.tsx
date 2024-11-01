@@ -9,7 +9,6 @@ import useLogin from "../../_hooks/useLogin";
 export interface LogInFormData {
   email: string;
   password: string;
-  keepLoggedIn: boolean;
 }
 
 const LoginForm = () => {
