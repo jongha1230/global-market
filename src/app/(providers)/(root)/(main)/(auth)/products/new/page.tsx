@@ -150,7 +150,7 @@ export default function NewProductPage() {
         price: Number((form.querySelector("#price") as HTMLInputElement).value),
         description: (form.querySelector("#description") as HTMLTextAreaElement)
           .value,
-        image_url: uploadedImageUrl,
+        imageUrl: uploadedImageUrl,
         seller: userId,
       };
 

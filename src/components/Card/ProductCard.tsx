@@ -1,36 +1,44 @@
+import { formatPrice } from "@/lib/utils"; // 가격 포맷팅 유틸리티
 import { Product } from "@/types/product";
+import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "../ui/card";
 
-// 상품 카드 컴포넌트
-export const ProductCard = ({ product }: { product: Product }) => {
+interface ProductCardProps {
+  product: Product;
+}
+
+export function ProductCard({ product }: ProductCardProps) {
+  const timeAgo = formatDistanceToNow(new Date(product.created_at), {
+    addSuffix: true,
+    locale: ko,
+  });
+
   return (
     <Link href={`/products/${product.id}`}>
-      <Card className="h-full transition-transform hover:-translate-y-1">
-        <CardContent className="p-0">
-          <div className="relative aspect-square">
-            <Image
-              src={product.imageUrl}
-              alt={product.title}
-              className="object-cover rounded-t-lg"
-              fill
-              priority={false}
-            />
+      <div className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+        <div className="relative aspect-square">
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="p-4">
+          <h3 className="text-lg font-semibold line-clamp-2">
+            {product.title}
+          </h3>
+          <p className="text-gray-600 mt-1">{formatPrice(product.price)}</p>
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-sm text-gray-500">
+              {product.seller.nickname}
+            </span>
+            <span className="text-sm text-gray-500">{timeAgo}</span>
           </div>
-          <div className="p-3">
-            <h3 className="text-16-medium truncate">{product.title}</h3>
-            <p className="text-18-bold mt-1">
-              {product.price.toLocaleString()}원
-            </p>
-            <div className="flex items-center mt-2 text-14-regular text-gray-500">
-              <span>{product.location}</span>
-              <span className="mx-1">•</span>
-              <span>{product.createdAt}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </Link>
   );
-};
+}

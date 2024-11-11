@@ -6,12 +6,77 @@ import { useAuthStore } from "@/stores/auth.store";
 import { createClient } from "@/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 const Header = () => {
   const { user, setUser } = useAuthStore();
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+        if (error) throw error;
+
+        if (session?.user) {
+          // 사용자 정보 가져오기 (nickname 등 추가 정보가 필요한 경우)
+          const { data: profile, error: profileError } = await supabase
+            .from("profiles") // 프로필 테이블명에 맞게 수정
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+
+          if (profileError) throw profileError;
+
+          setUser({
+            id: session.user.id,
+            email: session.user.email!,
+            nickname: profile?.nickname || null,
+            address: profile?.address || null,
+          });
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      }
+    };
+
+    checkSession();
+
+    // 세션 변경 이벤트 구독
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        // 사용자 정보 가져오기
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+
+        if (!profileError) {
+          setUser({
+            id: session.user.id,
+            email: session.user.email!,
+            nickname: profile?.nickname || null,
+            address: profile?.address || null,
+          });
+        }
+      } else {
+        setUser(null);
+      }
+    });
+
+    // 클린업 함수
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase, setUser]);
 
   const handleLogout = async () => {
     try {

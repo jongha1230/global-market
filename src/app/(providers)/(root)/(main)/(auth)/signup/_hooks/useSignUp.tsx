@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface SignUpFormData {
@@ -34,6 +35,8 @@ const useSignUp = () => {
     address: "",
     detailAddress: "",
   });
+
+  const router = useRouter();
 
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -81,10 +84,19 @@ const useSignUp = () => {
     validateField(name as keyof SignUpFormData, value);
   };
 
+  const extractMainAddress = (fullAddress: string) => {
+    const addressParts = fullAddress.split(" ");
+    // 우편번호 제거
+    addressParts.shift();
+    // 첫 3개 부분만 사용 (시/도, 시/군/구, 구)
+    return addressParts.slice(0, 3).join(" ");
+  };
+
   const signUpMutation = useMutation({
     mutationFn: (data: SignUpPayload) => axios.post("/api/auth/signup", data),
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       console.log("회원가입 성공:", response.data);
+      router.push("/");
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response) {
@@ -105,14 +117,11 @@ const useSignUp = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const fullAddress =
-      `${formData.zonecode} ${formData.address} ${formData.detailAddress}`.trim();
-
     signUpMutation.mutate({
       email: formData.email,
       password: formData.password,
       nickname: formData.nickname,
-      fullAddress,
+      fullAddress: formData.address, // 이미 메인 주소만 저장되어 있음
     });
   };
 
@@ -121,10 +130,13 @@ const useSignUp = () => {
     address: string;
     extraAddress: string;
   }) => {
+    // 기본 주소에서 메인 주소만 추출
+    const mainAddress = extractMainAddress(data.address);
+
     setFormData((prev) => ({
       ...prev,
       zonecode: data.zonecode,
-      address: `${data.address} ${data.extraAddress}`.trim(),
+      address: mainAddress, // 추출된 메인 주소만 저장
     }));
   };
 

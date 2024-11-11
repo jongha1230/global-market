@@ -21,12 +21,46 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const supabase = createClient();
-    const { name, price, description } = await request.json();
+
+    // 사용자 인증 체크
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { title, price, description, imageUrl } = await request.json();
+
+    // 데이터 유효성 검사
+    if (!title || !price) {
+      return NextResponse.json(
+        { error: "Title and price are required" },
+        { status: 400 }
+      );
+    }
 
     const { data, error } = await supabase
       .from("products")
-      .insert({ name, price, description })
-      .select();
+      .insert({
+        title,
+        price,
+        description,
+        imageUrl,
+        seller: user.id,
+      })
+      .select(
+        `
+        *,
+        seller:seller(
+          id,
+          email,
+          nickname
+        )
+      `
+      )
+      .single();
 
     if (error) throw error;
 
