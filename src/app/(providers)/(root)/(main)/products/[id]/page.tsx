@@ -4,7 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-
+import PaymentButton from "./_components/PaymentButton";
 interface Props {
   params: {
     id: string;
@@ -43,10 +43,11 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  console.log("Product in Page:", product);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* 상품 이미지 */}
         <div className="relative aspect-square rounded-lg overflow-hidden">
           <Image
             src={product.imageUrl}
@@ -56,8 +57,7 @@ export default async function ProductPage({ params }: Props) {
           />
         </div>
 
-        {/* 상품 정보 */}
-        <div>
+        <div className="flex flex-col">
           <h1 className="text-2xl font-bold mb-4">{product.title}</h1>
           <p className="text-3xl font-bold text-primary-100 mb-4">
             {formatPrice(product.price)}
@@ -76,9 +76,13 @@ export default async function ProductPage({ params }: Props) {
             <p className="text-lg">{product.description}</p>
           </div>
 
-          <div className="border-t pt-4">
+          <div className="border-t pt-4 mb-6">
             <h2 className="text-lg font-semibold mb-2">판매자 정보</h2>
             <p className="text-gray-600">{product.seller.nickname}</p>
+          </div>
+
+          <div className="mt-auto">
+            <PaymentButton product={product} />
           </div>
         </div>
       </div>

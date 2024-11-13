@@ -6,6 +6,7 @@ export interface Product {
   created_at: string;
   seller: {
     id: string;
+    email: string;
     nickname: string;
   };
   description: string;
