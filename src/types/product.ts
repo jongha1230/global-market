@@ -10,4 +10,5 @@ export interface Product {
     nickname: string;
   };
   description: string;
+  status: "AVAILABLE" | "SOLD";
 }

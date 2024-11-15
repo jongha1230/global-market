@@ -7,9 +7,10 @@ import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
+  isSold?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, isSold }: ProductCardProps) {
   const timeAgo = formatDistanceToNow(new Date(product.created_at), {
     addSuffix: true,
     locale: ko,
@@ -17,7 +18,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+      <div className="relative rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+        {isSold && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+            <span className="text-white text-lg font-bold">판매완료</span>
+          </div>
+        )}
         <div className="relative aspect-square">
           <Image
             src={product.imageUrl}

@@ -118,7 +118,7 @@ const Header = () => {
                 로그아웃
               </Button>
               <div className="w-px h-4 bg-black-100" aria-hidden="true" />
-              <Link href="/my-page">
+              <Link href="/mypage">
                 <Button
                   variant="ghost"
                   className="text-black-100 hover:text-primary-100"
